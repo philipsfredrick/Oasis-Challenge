@@ -1,0 +1,245 @@
+<div class="flex flex-col">
+  <div>
+    <h2 class="font-bold text-xl">Manage Tasks</h2>
+    <hr class="w-full mb-3 mt-3 border border-gray-400" />
+  </div>
+
+  <div class="flex justify-between">
+    <button class="btn btn-icon btn-rounded border border-gray-400">
+      <ng-icon name="heroFunnel"></ng-icon>
+      Filters
+    </button>
+
+    <button
+      class="btn btn-icon btn-rounded btn-primary"
+      (click)="openSlidePanel()"
+    >
+      <ng-icon name="heroPlus"></ng-icon>New Task
+    </button>
+  </div>
+  <div class="flex justify-between mt-4 items-center">
+    <h4 class="text-md text-gray-500 font-bold">Status</h4>
+    <h4 class="text-md text-gray-500 font-bold">Priority</h4>
+    <h4 class="text-md text-gray-500 font-bold">Due Date</h4>
+  </div>
+  <div class="flex justify-between items-center">
+    <div class="mt-1 inline-flex gap-2">
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByStatus === '' }"
+        (click)="onFilterByStatus('')"
+      >
+        ALL
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByStatus === 'PENDING' }"
+        (click)="onFilterByStatus('PENDING')"
+      >
+        PENDING
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByStatus === 'IN_PROGRESS' }"
+        (click)="onFilterByStatus('IN_PROGRESS')"
+      >
+        IN_PROGRESS
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByStatus === 'COMPLETED' }"
+        (click)="onFilterByStatus('COMPLETED')"
+      >
+        COMPLETED
+      </button>
+    </div>
+
+    <div class="mt-1 inline-flex gap-2">
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByPriority === 'CRITICAL' }"
+        (click)="onFilterByPriority('CRITICAL')"
+      >
+        CRITICAL
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByPriority === 'HIGH' }"
+        (click)="onFilterByPriority('HIGH')"
+      >
+        HIGH
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByPriority === 'MEDIUM' }"
+        (click)="onFilterByPriority('MEDIUM')"
+      >
+        MEDIUM
+      </button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByPriority === 'LOW' }"
+        (click)="onFilterByPriority('LOW')"
+      >
+        LOW
+      </button>
+    </div>
+    <div class="mt-1 inline-flex gap-2">
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [class]="{ 'btn-primary': filterByDueDate === '' }"
+        (click)="onFilterByDueDate('')"
+      >
+        DUE DATE
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-3 bg-white shadow">
+    @for (item of todos; track $index) {
+    <app-todo-card
+      [type]="item.status"
+      [todo]="item"
+      (click)="onLoadTodoForm(item)"
+    ></app-todo-card>
+    }
+  </div>
+</div>
+
+<app-slide-panel
+  [headerText]="'Todo Details'"
+  [isOpen]="isSlidePanelOpen"
+  (onClose)="onCloseSlidePanel()"
+>
+  <form
+    [formGroup]="todoForm"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    novalidate
+  >
+    <div class="form-group mb-1">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        id="title"
+        class="form-control"
+        [class]="{
+          invalid:
+            todoForm.get('title')?.hasError('required') &&
+            todoForm.get('title')?.touched,
+          valid: todoForm.get('title')?.valid
+        }"
+        placeholder="Title"
+        formControlName="title"
+      />
+      @if (todoForm.get('title')?.hasError('required') &&
+      todoForm.get('title')?.touched) {
+      <span class="form-error">Title is required.</span>
+      }
+    </div>
+    <div class="form-group mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        name=""
+        rows="10"
+        class="form-control"
+        [class]="{
+          invalid:
+            todoForm.get('description')?.hasError('required') &&
+            todoForm.get('description')?.touched,
+          valid: todoForm.get('description')?.valid
+        }"
+        placeholder="Description"
+        formControlName="description"
+      ></textarea>
+      @if (todoForm.get('description')?.hasError('required') &&
+      todoForm.get('description')?.touched) {
+      <span class="form-error">Description is required.</span>
+      }
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="dueDate" class="form-label">Due Date</label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        type="text"
+        id="dueDate"
+        class="form-control"
+        [class]="{
+          invalid:
+            todoForm.get('dueDate')?.hasError('required') &&
+            todoForm.get('dueDate')?.touched,
+          valid: todoForm.get('dueDate')?.valid
+        }"
+        placeholder="Due Date"
+        formControlName="dueDate"
+      />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (todoForm.get('dueDate')?.hasError('required') &&
+      todoForm.get('dueDate')?.touched) {
+      <span class="form-error">Due Date is required.</span>
+      }
+    </div>
+    <div class="form-group mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select
+        class="form-select"
+        [class]="{
+          invalid:
+            todoForm.get('status')?.hasError('required') &&
+            todoForm.get('status')?.touched,
+          valid: todoForm.get('status')?.valid
+        }"
+        formControlName="status"
+      >
+        @for (item of todoStatus; track $index) {
+        <option [value]="item">{{ item }}</option>
+        }
+      </select>
+      @if (todoForm.get('status')?.hasError('required') &&
+      todoForm.get('status')?.touched) {
+      <span class="form-error">status is required.</span>
+      }
+    </div>
+    <div class="form-group mb-3">
+      <label for="priority" class="form-label">Priority</label>
+      <select
+        class="form-select"
+        [class]="{
+          invalid:
+            todoForm.get('priority')?.hasError('required') &&
+            todoForm.get('priority')?.touched,
+          valid: todoForm.get('priority')?.valid
+        }"
+        formControlName="priority"
+      >
+        @for (item of todoPriority; track $index) {
+        <option [value]="item">{{ item }}</option>
+        }
+      </select>
+      @if (todoForm.get('priority')?.hasError('required') &&
+      todoForm.get('priority')?.touched) {
+      <span class="form-error">priority is required.</span>
+      }
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-success">Submit</button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCloseSlidePanel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</app-slide-panel>
+<mat-paginator
+  [length]="100"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  aria-label="Select page"
+>
+</mat-paginator>

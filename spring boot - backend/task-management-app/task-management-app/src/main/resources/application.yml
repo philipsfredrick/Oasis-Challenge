@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: task-management-app
+
+  datasource:
+    url: jdbc:postgresql://localhost:5500/task-mgt-app?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+#    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: false
+  main:
+    allow-circular-references: true
+server:
+  port: 9010
+
+jwt:
+  token:
+    secret_key: 645266556A586E3272357538782F413F4428472B4B6250655368566B59701122
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    env:
+      enabled: true
+

@@ -1,0 +1,83 @@
+<header class="app-header">
+  <div class="container flex items-center justify-between">
+    <h4 class="font-bold text-xl">Oasis Task Manager</h4>
+    <div class="flex items-center justify-between">
+      @if (this.isAuthenticated$| async) {
+      <div>
+        <button class="flex gap-2 items-center" (click)="openSlidePanel()">
+          <ng-icon name="heroUser"></ng-icon>
+        </button>
+      </div>
+      <app-slide-panel
+        [headerText]="'Profile Detail'"
+        [isOpen]="isSlidePanelOpen"
+        (onClose)="onCloseSlidePanel()"
+      >
+        <form
+          [formGroup]="userForm"
+          (ngSubmit)="onSubmit()"
+          autocomplete="off"
+          novalidate
+        >
+          <div class="form-group mb-1">
+            <label for="name" class="form-label">Name</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              [class]="{
+                invalid:
+                  userForm.get('name')?.hasError('required') &&
+                  userForm.get('name')?.touched,
+                valid: userForm.get('name')?.valid
+              }"
+              placeholder="Name"
+              formControlName="name"
+            />
+            @if (userForm.get('name')?.hasError('required') &&
+            userForm.get('name')?.touched) {
+            <span class="form-error">Name is required.</span>
+            }
+          </div>
+          <div class="form-group mb-1">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="text"
+              id="email"
+              class="form-control"
+              [class]="{
+                invalid:
+                  userForm.get('email')?.hasError('required') &&
+                  userForm.get('email')?.touched,
+                valid: userForm.get('email')?.valid
+              }"
+              placeholder="Email"
+              formControlName="email"
+            />
+            @if (userForm.get('email')?.hasError('required') &&
+            userForm.get('email')?.touched) {
+            <span class="form-error">Email is required.</span>
+            }
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="onCloseSlidePanel()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </app-slide-panel>
+      <div class="px-2 font-medium cursor-pointer" (click)="onLogout()">
+        Logout
+      </div>
+      }@else {
+      <div class="px-2 font-medium cursor-pointer">Login</div>
+      }
+      <!-- <div class="px-2 font-medium cursor-pointer">Register</div> -->
+    </div>
+  </div>
+</header>

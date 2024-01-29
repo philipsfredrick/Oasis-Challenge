@@ -1,0 +1,31 @@
+<div
+  class="flex justify-between gap-10 py-5 px-6 hover:bg-gray-100 relative border-b border-gray-200"
+>
+  <div class="flex flex-col gap-2 border-l-4 border-blue-100 pl-4">
+    <h4 class="font-bold">{{ todo.title }}</h4>
+    <p class="text-gray-400 h-6 overflow-y-hidden">{{ todo.description }}</p>
+    <button class="flex gap-2 items-center">
+      <ng-icon name="heroCalendar"></ng-icon><span>{{ todo.dueDate }}</span>
+    </button>
+  </div>
+  <div class="flex flex-col gap-2">
+    <div
+      class="bg-gray-100 border border-gray-500 text-gray-600 text-xs font-medium p-1 px-2 rounded-full"
+    >
+      {{ todo.status }}
+    </div>
+    <div
+      class="bg-gray-100 border border-[#FCA311] text-gray-600 text-xs text-center font-medium p-1 px-2 rounded-full"
+    >
+      {{ todo.priority }}
+    </div>
+    <div class="flex justify-center">
+      <button class="w-1/2 cursor-pointer">
+        <ng-icon name="heroPencil"></ng-icon>
+      </button>
+      <button class="w-1/2 cursor-pointer">
+        <ng-icon name="heroTrash"></ng-icon>
+      </button>
+    </div>
+  </div>
+</div>
